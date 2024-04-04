@@ -3,13 +3,13 @@ import GetShelterDetailsUseCaseOutput from "./dtos/get.shelter.details.usecase.o
 
 export default class GetShelterDetailsUseCase implements IUseCase<null, GetShelterDetailsUseCaseOutput> {
     run(input: null): Promise<GetShelterDetailsUseCaseOutput> {
-            return Promise.resolve(new GetShelterDetailsUseCaseOutput({
-                shelterName: "name",
-                shelterEmail: "email",
-                shelterPhone: "phone",
-                shelterWhatsApp: "whats",
-                createdAt: new Date(),
-                updatedAt: new Date()
-            }))
+        return Promise.resolve(new GetShelterDetailsUseCaseOutput({
+            shelterName: 'Abrigo Bigo',
+            shelterEmail: 'abb@gmail.com',
+            shelterPhone: '19981281830',
+            shelterWhatsApp: '199818182819',
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }))
     }
 }

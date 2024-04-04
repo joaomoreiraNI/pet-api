@@ -7,11 +7,9 @@ import GetShelterDetailsUseCase from './usecases/get.shelter.details.usecase';
   controllers: [ShelterController],
   providers: [
     {
-      provide: ShelterTokens.getSgelterDetailsUseCase,
+      provide: ShelterTokens.getShelterDetailsUseCase,
       useClass: GetShelterDetailsUseCase
     }
   ]
 })
-export class ShelterModule {
-
-}
+export class ShelterModule {}

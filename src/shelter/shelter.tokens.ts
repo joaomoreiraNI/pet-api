@@ -1,3 +1,3 @@
 export default class ShelterTokens {
-    static getSgelterDetailsUseCase = 'getSgelterDetailsUseCase';
+    static getShelterDetailsUseCase = 'getShelterDetailsUseCase'
 }
