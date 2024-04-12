@@ -7,6 +7,8 @@ import IPetRepository from '../interfaces/pet.repository.interface';
 import { error } from 'console';
 import { Pet } from '../schema/pet.schema';
 import PetNotFoundError from 'src/domain/erros/pet.not.found.error';
+import AppTokens from 'src/app.tokens';
+import IFileService from 'src/interfaces/file.service.interface';
 
 @Injectable()
 export default class GetPetByIdUseCase
@@ -15,6 +17,9 @@ export default class GetPetByIdUseCase
   constructor(
     @Inject(PetTokens.petRepository)
     private readonly petRepository: IPetRepository,
+
+    @Inject(AppTokens.fileService)
+    private readonly fileService: IFileService,
   ) {}
 
   async run(input: GetPetByIdUseCaseInput): Promise<GetPetByIdUseCaseOutput> {
@@ -24,6 +29,10 @@ export default class GetPetByIdUseCase
       throw new PetNotFoundError();
     }
 
+    const petPhoto = !!pet.photo
+      ? (await this.fileService.readFile(pet.photo)).toString('base64')
+      : null;
+
     return new GetPetByIdUseCaseOutput({
       id: pet._id,
       name: pet.name,
@@ -31,7 +40,7 @@ export default class GetPetByIdUseCase
       size: pet.size,
       gender: pet.gender,
       bio: pet.bio,
-      photo: null,
+      photo: petPhoto,
       createdAt: pet.createdAt,
       updatedAt: pet.updatedAt,
     });
