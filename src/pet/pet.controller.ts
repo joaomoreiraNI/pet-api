@@ -6,8 +6,11 @@ import {
   Get,
   Inject,
   Param,
+  Patch,
   Post,
   Put,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import CreatePetControllerInput from './dtos/create.pet.controller.input';
 import CreatePetUseCaseInput from './usecases/dtos/create.pet.usecase.input';
@@ -21,6 +24,10 @@ import UpdatePetByIdUseCaseInput from './usecases/dtos/update.pet.by.id.usecase.
 import UpdatePetByIdUseCaseOutput from './usecases/dtos/update.pet.by.id.usecase.output';
 import DeletePetByIdUseCaseInput from './usecases/dtos/delete.pet.by.id.usecase.input';
 import DeletePetByIdUseCaseOutput from './usecases/dtos/delete.pet.by.id.usecase.output';
+import { FileInterceptor } from '@nestjs/platform-express';
+import multerConfig from 'src/config/multer.config';
+import UpdatePetPhotoByIdUseCaseInput from './usecases/dtos/update.pet.photo.by.id.usecase.input';
+import UpdatePetPhotoByIdUseCaseOutput from './usecases/dtos/update.pet.photo.by.id.usecase.output';
 
 @Controller('pet')
 export class PetController {
@@ -46,6 +53,11 @@ export class PetController {
   private readonly deletePetByIdUseCase: IUseCase<
     DeletePetByIdUseCaseInput,
     DeletePetByIdUseCaseOutput
+  >;
+  @Inject(PetTokens.updatePetPhotoByIdUsecase)
+  private readonly updatePetPhotoByIdUsecase: IUseCase<
+    UpdatePetPhotoByIdUseCaseInput,
+    UpdatePetPhotoByIdUseCaseOutput
   >;
 
   @Post()
@@ -90,5 +102,18 @@ export class PetController {
     } catch (error) {
       throw new BadRequestException(JSON.parse(error.message));
     }
+  }
+
+  @Patch(':id/photo')
+  @UseInterceptors(FileInterceptor('photo', multerConfig))
+  async updatePhoto(
+    @UploadedFile() photo: Express.Multer.File,
+    @Param('id') id: string,
+  ): Promise<UpdatePetPhotoByIdUseCaseOutput> {
+    const useCaseInput = new UpdatePetPhotoByIdUseCaseInput({
+      id,
+      photoPatch: photo.path,
+    });
+    return await this.updatePetPhotoByIdUsecase.run(useCaseInput);
   }
 }
