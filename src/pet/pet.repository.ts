@@ -31,11 +31,11 @@ export default class PetRepository implements IPetRepository {
     }
 
     if (input.size) {
-      query = query.find({ type: input.size });
+      query = query.find({ size: input.size });
     }
 
     if (input.gender) {
-      query = query.find({ type: input.gender });
+      query = query.find({ gender: input.gender });
     }
 
     const totalQuery = query.clone().countDocuments();
